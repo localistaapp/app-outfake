@@ -1,30 +1,14 @@
-# node-react-starter
-A simple fullstack starter application using Node.js, Express.js, React.js and MongoDB
+# simple-node-js-react-npm-app
 
-To run this project you need to add the backend and frontend dependencies.
-In the root of the project run the following command
+This repository is for the
+[Build a Node.js and React app with npm](https://jenkins.io/doc/tutorials/build-a-node-js-and-react-app-with-npm/)
+tutorial in the [Jenkins User Documentation](https://jenkins.io/doc/).
 
-```
-$ npm install
-```
+The repository contains a simple Node.js and React application which generates
+a web page with the content "Welcome to React" and is accompanied by a test to
+check that the application renders satisfactorily.
 
-Then, navigate to the client directory and run the following command:
-
-```
-recommended
-$ yarn
-```
-or
-```
-npm install
-```
-
-### Running the application
-
-*To run this application, you must have MongoDB up and running*
-
-To run the application, use the following command:
-
-```
-$ npm run dev
-```
+The `jenkins` directory contains an example of the `Jenkinsfile` (i.e. Pipeline)
+you'll be creating yourself during the tutorial and the `scripts` subdirectory
+contains shell scripts with commands that are executed when Jenkins processes
+the "Test" and "Deliver" stages of your Pipeline.
