@@ -4,20 +4,56 @@ import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+   elementInViewport(el) {
+      var top = el.offsetTop;
+      var left = el.offsetLeft;
+      var width = el.offsetWidth;
+      var height = el.offsetHeight;
+    
+      while(el.offsetParent) {
+        el = el.offsetParent;
+        top += el.offsetTop;
+        left += el.offsetLeft;
+      }
+    
+      return (
+        top < (window.pageYOffset + window.innerHeight) &&
+        left < (window.pageXOffset + window.innerWidth) &&
+        (top + height) > window.pageYOffset &&
+        (left + width) > window.pageXOffset
+      );
+    }
+   tempTimer() {
+      setTimeout(()=>{this.login();this.setState({timerSet: true})},5000);
+      clearInterval(window.viewportCheck);
+      //return true;
+   }
    login() {
-      console.log('logging in');
-      this.setState({loading: true});
-      this.setState({messageTxt: 'Searching 100 million+ assets & dark web...'})
+      if (!this.state.loading) {
+      console.log('log in');
+      this.setState({loading: true, userEmail: 'sampath.oops@gmail.com'});
+      this.setState({messageTxt: 'Searching 100 million+ assets & dark web...'});
+      setTimeout(()=>{this.setState({messageTxt: 'Looking for stolen passwords, phone numbers, addresses & more...'});},4000);
+      setTimeout(()=>{this.setState({currStep: 2, messageTxt: 'Your personal data including your <b>address</b> has been exposed on dark web.'});},6000);
+      console.log('userEmail: ', this.state.userEmail);
+      }
    }
    constructor(props) {
       super(props);
-      this.state = {loading: false, messageTxt: 'Sign in with your google account to continue...'};
+      this.state = {currStep: 1, loading: false, messageTxt: 'Sign in with your google account to continue...', userEmail: '', exposures: `<div class="flex flex-wrap -m-3 mb-10"><div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl"x-data="{ accordion: false }"x-on:click="accordion = !accordion"><div class="flex flex-wrap -m-2"><div class="p-2 flex-1"><h3 class="font-black font-heading text-gray-900 text-l"data-config-id=txt-b0bdec-2>Do you provide any free plan?</h3><div class="duration-500 h-0 overflow-hidden":style="accordion ? 'height: ' + $refs.container.scrollHeight + 'px' : ''"x-ref=container><p class="font-bold mt-4 text-black-500"data-config-id=txt-b0bdec-7 style=font-family:Quicksand;font-weight:500>Yes, you get all the basic protection with our free plan that includes personal risk profiles & cybersafety. </div></div><div class="p-2 w-auto"><span class="inline-block rotate-0 transform":class="{'rotate-180': accordion, 'rotate-0': !accordion }"><svg data-config-id=svg-b0bdec-1 fill=none height=24 viewBox="0 0 24 24"width=24 xmlns=http://www.w3.org/2000/svg><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z"fill=#D1D5DB></path></svg></span></div></div></div></div><div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl"x-data="{ accordion: false }"x-on:click="accordion = !accordion"><div class="flex flex-wrap -m-2"><div class="p-2 flex-1"><h3 class="font-black font-heading text-gray-900 text-l"data-config-id=txt-b0bdec-3>Does it cover cyber protection in India?</h3><div class="duration-500 h-0 overflow-hidden":style="accordion ? 'height: ' + $refs.container.scrollHeight + 'px' : ''"x-ref=container><p class="font-bold mt-4 text-black-500"data-config-id=txt-b0bdec-8 style=font-family:Quicksand;font-weight:500>Yes, Proveshare protects against widespread & emerging scams focused in India</div></div><div class="p-2 w-auto"><span class="inline-block rotate-0 transform":class="{'rotate-180': accordion, 'rotate-0': !accordion }"><svg data-config-id=svg-b0bdec-2 fill=none height=24 viewBox="0 0 24 24"width=24 xmlns=http://www.w3.org/2000/svg><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z"fill=#D1D5DB></path></svg></span></div></div></div></div><div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl"x-data="{ accordion: false }"x-on:click="accordion = !accordion"><div class="flex flex-wrap -m-2"><div class="p-2 flex-1"><h3 class="font-black font-heading text-gray-900 text-l"data-config-id=txt-b0bdec-4>What is a Free risk profile?</h3><div class="duration-500 h-0 overflow-hidden":style="accordion ? 'height: ' + $refs.container.scrollHeight + 'px' : ''"x-ref=container><p class="font-bold mt-4 text-black-500"data-config-id=txt-b0bdec-9 style=font-family:Quicksand;font-weight:500>Your Free risk profile includes all you need to know about the possible threats to your personal safety based on your online behavior</div></div><div class="p-2 w-auto"><span class="inline-block rotate-0 transform":class="{'rotate-180': accordion, 'rotate-0': !accordion }"><svg data-config-id=svg-b0bdec-3 fill=none height=24 viewBox="0 0 24 24"width=24 xmlns=http://www.w3.org/2000/svg><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z"fill=#D1D5DB></path></svg></span></div></div></div></div><div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl"x-data="{ accordion: false }"x-on:click="accordion = !accordion"><div class="flex flex-wrap -m-2"><div class="p-2 flex-1"><h3 class="font-black font-heading text-gray-900 text-l"data-config-id=txt-b0bdec-5>How to proceed next?</h3><div class="duration-500 h-0 overflow-hidden":style="accordion ? 'height: ' + $refs.container.scrollHeight + 'px' : ''"x-ref=container><p class="font-bold mt-4 text-black-500"data-config-id=txt-b0bdec-10 style=font-family:Quicksand;font-weight:500>Start by clicking the blue button below that says "Check your risk. Free" to create your risk profile & get basic protection now!</div></div><div class="p-2 w-auto"><span class="inline-block rotate-0 transform":class="{'rotate-180': accordion, 'rotate-0': !accordion }"><svg data-config-id=svg-b0bdec-4 fill=none height=24 viewBox="0 0 24 24"width=24 xmlns=http://www.w3.org/2000/svg><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z"fill=#D1D5DB></path></svg></span></div></div></div></div></div><br><br><br>`};
+   }
+   componentDidMount() {
+      window.viewportCheck = setInterval(()=> {
+         if(this.elementInViewport(document.getElementById('risk-checker'))) {
+            this.tempTimer();
+         }
+      },2000);
    }
   render() {
     return (
-      <section data-section-id="5" data-share="" data-category="navigations" data-component-id="886f4350_01_awz" className="py-6 bg-white" x-data="{ mobileNavOpen: false }">
+      <section id="risk-checker" data-section-id="5" data-share="" data-category="navigations" data-component-id="886f4350_01_awz" className="py-6 bg-white" x-data="{ mobileNavOpen: false }">
             <div className="container mx-auto px-4">
-               <div className="flex items-center justify-between px-6 py-3.5 bg-gray-100 border border-gray-100 rounded-full bg-blank">
+               <div className="flex items-center justify-between px-6 py-3.5 bg-gray-100 border border-gray-100 rounded-full bg-blank" style={{paddingBottom: '2rem'}}>
                   <div className="w-auto">
                      <div className="flex flex-wrap items-center">
                         <div className="w-auto">
@@ -52,9 +88,9 @@ class App extends Component {
                </div>
                
             </div>
-            <>{sessionStorage.getItem('user') == null && setTimeout(()=>{this.login()},5000) && <GoogleOneTapLogin onError={(error) => console.log(error)} onSuccess={(response) => {console.log(response);}} googleAccountConfigs={{ client_id: '128159303865-64ustcdp4pj9f6isg39p7hekhjdj2ln5.apps.googleusercontent.com',auto_select: false,cancel_on_tap_outside: false }} />}</>
-            <div class="container mx-auto px-4 py-6" style={{background: '#f3f4f6'}}>
-               <div class="px-8 pt-16 bg-white border border-gray-100 rounded-t-3xl pad-0">
+            <>{sessionStorage.getItem('user') == null && <GoogleOneTapLogin onError={(error) => console.log(error)} onSuccess={(response) => {console.log(response);}} googleAccountConfigs={{ client_id: '128159303865-64ustcdp4pj9f6isg39p7hekhjdj2ln5.apps.googleusercontent.com',auto_select: false,cancel_on_tap_outside: false }} />}</>
+            {this.state.currStep == 1 && <div id="checker-main" class="container mx-auto px-4 py-6" style={{background: '#f3f4f6'}}>
+               <div class="px-8 pt-16 bg-white border border-gray-100 rounded-t-3xl pad-0" >
                   <div class="max-w-7xl mx-auto">
                      <div class="flex flex-wrap items-center justify-between -m-4 pb-12 pb-6">
                         <div class="w-full md:w-1/2 p-4 p-0 p-0">
@@ -83,10 +119,46 @@ class App extends Component {
                         </div>
                      </div>
                   </div>
+               </div>}
+               {this.state.currStep == 2 && <div id="checker-step2" class="container mx-auto px-4 py-6" style={{background: '#f3f4f6'}}>
+               <div class="px-8 pt-16 bg-white border border-gray-100 rounded-t-3xl pad-0" style={{background: 'none'}}>
+                  <div class="max-w-7xl mx-auto">
+                     <div class="flex flex-wrap items-center justify-between -m-4 pb-12 pb-6">
+                        <div class="w-full md:w-1/2 p-0 p-0" style={{paddingBottom: '0.6rem',paddingLeft: '1rem',display: 'flex'}}>
+                           <img src="./psassets/warning.png" style={{width: '48px'}}/>
+                           <h2 class="font-heading md:text-5xl text-gray-900 font-black tracking-tight text-3xl" data-config-id="text11" style={{color: '#ff4747',fontSize: '1.5rem',marginTop: '8px'}}>8 <span style={{textDecoration: 'underline'}}>cyber leaks</span> found!</h2>
+                        </div>
+                        
+                     </div>
+                  </div>
                </div>
+               <div class="relative px-8">
+                  <div class="max-w-7xl mx-auto">
+                     <div class="absolute left-0 w-full h-1/2 bg-white border-l border-r border-b border-gray-100 rounded-b-3xl top-0" style={{zIndex: '-1'}}></div>
+                     <div class="relative z-10 flex flex-nowrap -m-4 transition-transform duration-500 ease-in-out" >
+                        <div x-ref="slide1" class="flex-shrink-0 max-w-sm w-full p-0">
+                           <div class="flex flex-col justify-between p-8 h-full bg-gray-100 border border-gray-100 rounded-3xl shadow-md p-4 fheight m-4" style={{height: '143px',background:'#fff'}} contenteditable="false">
+                              <div class="flex-initial mb-0 mb-0" style={{display: 'inline-table'}}>
+                              <img className='custom-icon' src="./psassets/binary2.png" alt="" />
+                              <p id="messageSpan" style={{paddingLeft: '16px',display: 'table-cell',verticalAlign: 'top'}} class="text-lg text-gray-700 custom-msg" dangerouslySetInnerHTML={{__html:this.state.messageTxt}}></p>
+                              </div>
+                              <div class="flex flex-wrap -m-2">
+                           <div class="w-full md:w-auto p-2 float-bottom" id="risk-checker-cta"><a class="block w-full px-8 py-3.5 text-lg text-center text-white font-bold bg-gray-900 hover:bg-gray-800 focus:ring-4 focus:ring-gray-600 rounded-full" onclick="document.getElementById('risk-checker').style.display='block';document.getElementById('content').style.display='none';document.getElementById('risk-checker').scrollIntoView({ behavior: 'smooth'});" data-config-id="text3">Fix Cyber Leaks</a></div>
+                        </div>
+                           </div>
+                        </div>
+                        </div>
+                     </div>
+                     <div class="max-w-3xl mx-auto" style={{background: 'white',padding: '0px',position: 'absolute',zIndex: 1,top: '200px',left:'0px'}} dangerouslySetInnerHTML={{__html: this.state.exposures}}>
+
+                     </div>
+                     
+                  </div>
+               </div>}
          </section>
     );
   }
+
 }
 
 export default App;
