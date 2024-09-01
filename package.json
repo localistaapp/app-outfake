@@ -2,7 +2,7 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000",
+  "proxy": "http://www.proveshare.com:5000",
   "dependencies": {
     "axios": "0.18.0",
     "express": "^4.19.2",
