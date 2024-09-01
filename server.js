@@ -31,7 +31,7 @@ app.get('/cyber-leaks/:email', async function(request, response) {
                password: '6hmmriun21gzwi5gs0e4zro1g4vbu4vq'
             }
          });
-         console.log('--Response from cyber leaks--', cyberLeaksResponse.data);
+        //console.log('--Response from cyber leaks--', cyberLeaksResponse.data);
     if (cyberLeaksResponse != null && cyberLeaksResponse.hasOwnProperty('data')) {
         response.send(cyberLeaksResponse.data);
     } else {
