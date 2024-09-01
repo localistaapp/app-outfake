@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import GoogleOneTapLogin from 'react-google-one-tap-login';
+import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
 
@@ -28,19 +29,48 @@ class App extends Component {
       clearInterval(window.viewportCheck);
       //return true;
    }
+   async fetchCyberLeaks(email) {
+         if (localStorage.getItem('user-cyber-leaks') != null) {
+            return localStorage.getItem('user-cyber-leaks');
+         } else {
+            let fetchUrl = location.host.indexOf('localhost') == 0 ? 'http://localhost:5000/cyber-leaks/'+email : 'https://www.proveshare.com/cyber-leaks/'+email;
+            let cyberLeaksCount = 0;
+            let cyberLeaksStr = 0;
+            const response = await axios.get(fetchUrl, {
+               headers: {
+                  'Accept': 'application/json'
+               },
+               auth: {
+                  username: 'sampath.oops@gmail.com',
+                  password: '6hmmriun21gzwi5gs0e4zro1g4vbu4vq'
+               }
+            });
+            console.log('--cyber leaks response--', response);
+            if (response && response.total && response.entries) {
+               cyberLeaksStr = JSON.stringify(response);
+               localStorage.setItem('user-cyber-leaks', cyberLeaksStr);
+            }
+         }
+   }
+   renderCyberLeaks(email) {
+      let leaksStr = this.fetchCyberLeaks(email);
+      let leaks = JSON.parse(leaksStr);
+      console.log('--leaks--', leaks);
+   }
    login() {
       if (!this.state.loading) {
       console.log('log in');
       this.setState({loading: true, userEmail: 'sampath.oops@gmail.com'});
       this.setState({messageTxt: 'Searching 100 million+ assets & dark web...'});
       setTimeout(()=>{this.setState({messageTxt: 'Looking for stolen passwords, phone numbers, addresses & more...'});},4000);
-      setTimeout(()=>{this.setState({currStep: 2, messageTxt: 'Your personal data including your <b>address</b> has been exposed on dark web.'});},6000);
+      setTimeout(()=>{this.renderCyberLeaks('sampath.oops@gmail.com');this.setState({currStep: 2, messageTxt: 'Your personal data including your <b>address</b> has been exposed on dark web.'});},6000);
       console.log('userEmail: ', this.state.userEmail);
       }
    }
    constructor(props) {
       super(props);
-      this.state = {currStep: 1, loading: false, messageTxt: 'Sign in with your google account to continue...', userEmail: '', exposures: `<div class="flex flex-wrap -m-3 mb-10"><div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl"x-data="{ accordion: false }"x-on:click="accordion = !accordion"><div class="flex flex-wrap -m-2"><div class="p-2 flex-1"><h3 class="font-black font-heading text-gray-900 text-l"data-config-id=txt-b0bdec-2>Do you provide any free plan?</h3><div class="duration-500 h-0 overflow-hidden":style="accordion ? 'height: ' + $refs.container.scrollHeight + 'px' : ''"x-ref=container><p class="font-bold mt-4 text-black-500"data-config-id=txt-b0bdec-7 style=font-family:Quicksand;font-weight:500>Yes, you get all the basic protection with our free plan that includes personal risk profiles & cybersafety. </div></div><div class="p-2 w-auto"><span class="inline-block rotate-0 transform":class="{'rotate-180': accordion, 'rotate-0': !accordion }"><svg data-config-id=svg-b0bdec-1 fill=none height=24 viewBox="0 0 24 24"width=24 xmlns=http://www.w3.org/2000/svg><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z"fill=#D1D5DB></path></svg></span></div></div></div></div><div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl"x-data="{ accordion: false }"x-on:click="accordion = !accordion"><div class="flex flex-wrap -m-2"><div class="p-2 flex-1"><h3 class="font-black font-heading text-gray-900 text-l"data-config-id=txt-b0bdec-3>Does it cover cyber protection in India?</h3><div class="duration-500 h-0 overflow-hidden":style="accordion ? 'height: ' + $refs.container.scrollHeight + 'px' : ''"x-ref=container><p class="font-bold mt-4 text-black-500"data-config-id=txt-b0bdec-8 style=font-family:Quicksand;font-weight:500>Yes, Proveshare protects against widespread & emerging scams focused in India</div></div><div class="p-2 w-auto"><span class="inline-block rotate-0 transform":class="{'rotate-180': accordion, 'rotate-0': !accordion }"><svg data-config-id=svg-b0bdec-2 fill=none height=24 viewBox="0 0 24 24"width=24 xmlns=http://www.w3.org/2000/svg><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z"fill=#D1D5DB></path></svg></span></div></div></div></div><div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl"x-data="{ accordion: false }"x-on:click="accordion = !accordion"><div class="flex flex-wrap -m-2"><div class="p-2 flex-1"><h3 class="font-black font-heading text-gray-900 text-l"data-config-id=txt-b0bdec-4>What is a Free risk profile?</h3><div class="duration-500 h-0 overflow-hidden":style="accordion ? 'height: ' + $refs.container.scrollHeight + 'px' : ''"x-ref=container><p class="font-bold mt-4 text-black-500"data-config-id=txt-b0bdec-9 style=font-family:Quicksand;font-weight:500>Your Free risk profile includes all you need to know about the possible threats to your personal safety based on your online behavior</div></div><div class="p-2 w-auto"><span class="inline-block rotate-0 transform":class="{'rotate-180': accordion, 'rotate-0': !accordion }"><svg data-config-id=svg-b0bdec-3 fill=none height=24 viewBox="0 0 24 24"width=24 xmlns=http://www.w3.org/2000/svg><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z"fill=#D1D5DB></path></svg></span></div></div></div></div><div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl"x-data="{ accordion: false }"x-on:click="accordion = !accordion"><div class="flex flex-wrap -m-2"><div class="p-2 flex-1"><h3 class="font-black font-heading text-gray-900 text-l"data-config-id=txt-b0bdec-5>How to proceed next?</h3><div class="duration-500 h-0 overflow-hidden":style="accordion ? 'height: ' + $refs.container.scrollHeight + 'px' : ''"x-ref=container><p class="font-bold mt-4 text-black-500"data-config-id=txt-b0bdec-10 style=font-family:Quicksand;font-weight:500>Start by clicking the blue button below that says "Check your risk. Free" to create your risk profile & get basic protection now!</div></div><div class="p-2 w-auto"><span class="inline-block rotate-0 transform":class="{'rotate-180': accordion, 'rotate-0': !accordion }"><svg data-config-id=svg-b0bdec-4 fill=none height=24 viewBox="0 0 24 24"width=24 xmlns=http://www.w3.org/2000/svg><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z"fill=#D1D5DB></path></svg></span></div></div></div></div></div><br><br><br>`};
+      this.leakTemplate = `<div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl" x-data="{ accordion: false }" x-on:click="accordion = !accordion"><div class="-m-2 flex flex-wrap"><div class="p-2 flex-1"><div style="display:flex"><img src="https://img.logo.dev/{AppName}?token=pk_G0TzXJmeR22hjyoG7hROlQ" style="width:36px;height:36px;border-radius:8px"><h3 class="font-black font-heading text-gray-900 text-l" data-config-id="txt-b0bdec-2" style="margin-top:5px;margin-left:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:250px">Likely exposures - {AttributesExposed}</h3></div><div class="duration-500 h-0 overflow-hidden" :style="accordion ? 'height: ' + $refs.container.scrollHeight + 'px' : ''" x-ref="container"><p class="font-bold mt-4 text-black-500" data-config-id="txt-b0bdec-7" style="font-family:Quicksand;font-weight:500"><table style="margin-left:48px">{trHTML}</table></div></div><div class="p-2 w-auto"><span :class="{'rotate-180': accordion, 'rotate-0': !accordion }" class="inline-block rotate-0 transform"><svg data-config-id="svg-b0bdec-1" fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z" fill="#D1D5DB"></path></svg></span></div></div></div></div>`;
+      this.state = {currStep: 1, loading: false, messageTxt: 'Sign in with your google account to continue...', userEmail: '', exposures: `<div class="flex flex-wrap -m-3 mb-10">${this.leakTemplate}</div><br><br><br>`};
    }
    componentDidMount() {
       window.viewportCheck = setInterval(()=> {
