@@ -52,8 +52,8 @@ class App extends Component {
             }
          }
    }
-   renderCyberLeaks(email) {
-      let leaksStr = this.fetchCyberLeaks(email);
+   async renderCyberLeaks(email) {
+      let leaksStr = await this.fetchCyberLeaks(email);
       let leaks = JSON.parse(leaksStr);
       console.log('--leaks--', leaks);
    }

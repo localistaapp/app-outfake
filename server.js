@@ -11,6 +11,11 @@ app.listen(PORT, (error) =>{
     }
 );
 
+app.use('/api', createProxyMiddleware({ 
+    target: 'http://localhost:3000',  // Backend server
+    changeOrigin: true
+}));
+
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-origin", "*")
     res.setHeader('Access-Control-Allow-Methods', "GET,POST,OPTIONS")
