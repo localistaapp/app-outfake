@@ -1,6 +1,6 @@
 const express = require('express');
 var axios = require('axios');
-
+const cors = require("cors"); //this is a library to config easily cors
 const app = express();
 const PORT = 5000;
 app.listen(PORT, (error) =>{
@@ -10,6 +10,8 @@ app.listen(PORT, (error) =>{
         console.log("Error occurred, server can't start", error);
     }
 );
+
+app.use(cors({ origin: true })); // enable origin cors
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-origin", "*")

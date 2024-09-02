@@ -30,11 +30,10 @@ class App extends Component {
       //return true;
    }
    async fetchCyberLeaks(email) {
-         if (localStorage.getItem('user-cyber-leaks') != null) {
+         if (localStorage.getItem('user-cyber-leaks-3') != null) {
             return localStorage.getItem('user-cyber-leaks');
          } else {
-            let fetchUrl = location.host.indexOf('localhost') == 0 ? 'http://localhost:5000/cyber-leaks/'+email : 'https://www.proveshare.com/cyber-leaks/'+email;
-            let cyberLeaksCount = 0;
+            let fetchUrl =  'https://api.dehashed.com/search?query=email:'+email+'&size=10000';
             let cyberLeaksStr = 0;
             const response = await axios.get(fetchUrl, {
                headers: {
@@ -56,6 +55,57 @@ class App extends Component {
       let leaksStr = await this.fetchCyberLeaks(email);
       let leaks = JSON.parse(leaksStr);
       console.log('--leaks--', leaks);
+      debugger;
+      let entries = leaks.entries;
+      let entryAddressLeaks = entries.filter((a) => a.address != '');
+      let phoneNumberLeaks = entries.filter((a) => a.phone != '');
+      let hashedPasswordLeaks = entries.filter((a) => a.hashed_password != '');
+      let ipAddressLeaks = entries.filter((a) => a.ip_address != '');
+      let numLeaks = leaks.total;
+      let leaksArr = [...entryAddressLeaks, ...phoneNumberLeaks, ...hashedPasswordLeaks, ...ipAddressLeaks];
+      let str1 = '<table style="margin-left:48px">';
+      let str2 = '</table>';
+      let strArr = [];
+      
+      let attributesExposed ='';
+      let linkTemplateHTML = '';
+      for(var i=0;i<entries.length-1;i++) {
+         let strLeaksStr = '';
+         if(entries[i].address != '') {
+          strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Address:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].address}</td></tr>`;
+          attributesExposed = 'Address';
+         }
+         if(entries[i].phone != '') {
+            strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Phone Number:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].phone}</td></tr>`;
+            attributesExposed += ' Phone number';
+         }
+         if(entries[i].hashed_password != '') {
+            strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Hashed Password:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].hashed_password}</td></tr>`;
+            attributesExposed += ' Phone number';
+         }
+         if(entries[i].ip_address != '') {
+            strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Location/IP:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].ip_address}</td></tr>`;
+            attributesExposed += ' Phone number';
+         }
+         let appName = entries[i].database_name;
+         let appImgUrl = '';
+         if (appName.indexOf('www') != -1) {
+            appName = appName.substr(appName.indexOf('www'),appName.indexOf('.com')+4);
+         }
+         if (appName.indexOf('_com') != -1) {
+            appName = appName.replaceAll('_com','.com');
+         }
+         let dbName = appName;
+         if (appName.indexOf('.com') == -1) {
+            appName = appName+'.com';
+         }
+         if (attributesExposed != '') {
+            linkTemplateHTML += this.leakTemplate.replaceAll('{AttributesExposed}',attributesExposed).replaceAll('{AppName}',appName).replaceAll('{dbname}',dbName).replaceAll('{trHTML}',strLeaksStr);
+         }
+      }
+
+      console.log('---linkTemplateHTML---', linkTemplateHTML);
+      this.setState({exposures: `<div class="flex flex-wrap -m-3 mb-10">${linkTemplateHTML}</div><br><br><br></br>`});
    }
    login() {
       if (!this.state.loading) {
@@ -69,7 +119,7 @@ class App extends Component {
    }
    constructor(props) {
       super(props);
-      this.leakTemplate = `<div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl" x-data="{ accordion: false }" x-on:click="accordion = !accordion"><div class="-m-2 flex flex-wrap"><div class="p-2 flex-1"><div style="display:flex"><img src="https://img.logo.dev/{AppName}?token=pk_G0TzXJmeR22hjyoG7hROlQ" style="width:36px;height:36px;border-radius:8px"><h3 class="font-black font-heading text-gray-900 text-l" data-config-id="txt-b0bdec-2" style="margin-top:5px;margin-left:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:250px">Likely exposures - {AttributesExposed}</h3></div><div class="duration-500 h-0 overflow-hidden" :style="accordion ? 'height: ' + $refs.container.scrollHeight + 'px' : ''" x-ref="container"><p class="font-bold mt-4 text-black-500" data-config-id="txt-b0bdec-7" style="font-family:Quicksand;font-weight:500"><table style="margin-left:48px">{trHTML}</table></div></div><div class="p-2 w-auto"><span :class="{'rotate-180': accordion, 'rotate-0': !accordion }" class="inline-block rotate-0 transform"><svg data-config-id="svg-b0bdec-1" fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z" fill="#D1D5DB"></path></svg></span></div></div></div></div>`;
+      this.leakTemplate = `<div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl" x-data="{ accordion: false }" x-on:click="accordion = !accordion"><div class="-m-2 flex flex-wrap"><div class="p-2 flex-1"><div style="display:flex"><img src="https://img.logo.dev/{AppName}?token=pk_G0TzXJmeR22hjyoG7hROlQ" style="width:36px;height:36px;border-radius:8px"><h3 class="font-black font-heading text-gray-900 text-l" data-config-id="txt-b0bdec-2" style="margin-top:5px;margin-left:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:200px">{dbname} likely exposures - {AttributesExposed}</h3></div><div class="duration-500 h-0 overflow-hidden" :style="accordion ? 'height: ' + $refs.container.scrollHeight + 'px' : ''" x-ref="container"><p class="font-bold mt-4 text-black-500" data-config-id="txt-b0bdec-7" style="font-family:Quicksand;font-weight:500"><table style="margin-left:18px">{trHTML}</table></div></div><div class="p-2 w-auto"><span class="inline-block rotate-0 transform"><svg data-config-id="svg-b0bdec-1" fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z" fill="#D1D5DB"></path></svg></span></div></div></div></div>`;
       this.state = {currStep: 1, loading: false, messageTxt: 'Sign in with your google account to continue...', userEmail: '', exposures: `<div class="flex flex-wrap -m-3 mb-10">${this.leakTemplate}</div><br><br><br>`};
    }
    componentDidMount() {

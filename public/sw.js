@@ -12,11 +12,11 @@ self.addEventListener('install', function(e) {
   self.skipWaiting();
 });
 
-/* Serve cached content when offline */
+/* Serve cached content when offline
 self.addEventListener('fetch', function(e) {
   e.respondWith(
     caches.match(e.request).then(function(response) {
       return response || fetch(e.request);
     })
   );
-});
+}); */
