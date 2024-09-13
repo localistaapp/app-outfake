@@ -13,6 +13,7 @@ var { Pool } = require('pg');
 var axios = require('axios');
 var crypto = require('crypto');
 var QRCode = require('qrcode');
+var cors = require('cors');
 //var mergeImages = require('merge-images');
 var base64 = require('file-base64');
 //const { Canvas, Image } = require('canvas');
@@ -170,6 +171,7 @@ console.log('--Token URL:--', tokenUrl);
 
 });
 
+app.use(cors());
 app.use(cors({ origin : '*'}));
 
 app.get('/cyber-leaks/:email', function(request, response) {
