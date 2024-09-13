@@ -179,18 +179,20 @@ app.get('/cyber-leaks/:email', function(request, response) {
   let email = request.params.email;
   console.log('--Loading cyber leaks for--', email);
 
-  cloudscraper.get('https://api.dehashed.com/search?query=email:'+email+'&size=10000&api', {
-          headers: {
-             'Accept': 'application/json',
-             'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Headers': '*',
-              'Access-Control-Allow-Credentials': 'true'
-          },
-          auth: {
-             username: 'sampath.oops@gmail.com',
-             password: '6hmmriun21gzwi5gs0e4zro1g4vbu4vq'
-          }
-       }).then(cyberLeaksResponse => {
+  let options = {
+    uri: 'https://api.dehashed.com/search?query=email:'+email+'&size=10000',
+      headers: {
+         'Accept': 'application/json',
+         'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*',
+          'Access-Control-Allow-Credentials': 'true'
+      },
+      auth: {
+         username: 'sampath.oops@gmail.com',
+         password: '6hmmriun21gzwi5gs0e4zro1g4vbu4vq'
+      }
+  };
+  cloudscraper.get(options).then(cyberLeaksResponse => {
           //console.log('--Response from cyber leaks--', cyberLeaksResponse.data);
           if (cyberLeaksResponse != null && cyberLeaksResponse.hasOwnProperty('data')) {
             response.send(cyberLeaksResponse.data);
