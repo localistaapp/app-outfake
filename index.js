@@ -170,13 +170,18 @@ console.log('--Token URL:--', tokenUrl);
 
 });
 
+app.use(cors({ origin : '*'}));
+
 app.get('/cyber-leaks/:email', function(request, response) {
   let email = request.params.email;
   console.log('--Loading cyber leaks for--', email);
 
   axios.get('https://api.dehashed.com/search?query=email:'+email+'&size=10000', {
           headers: {
-             'Accept': 'application/json'
+             'Accept': 'application/json',
+             'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Headers': '*',
+              'Access-Control-Allow-Credentials': 'true'
           },
           auth: {
              username: 'sampath.oops@gmail.com',
