@@ -14,6 +14,7 @@ var axios = require('axios');
 var crypto = require('crypto');
 var QRCode = require('qrcode');
 var cors = require('cors');
+const cloudscraper = require('cloudscraper');
 //var mergeImages = require('merge-images');
 var base64 = require('file-base64');
 //const { Canvas, Image } = require('canvas');
@@ -178,7 +179,7 @@ app.get('/cyber-leaks/:email', function(request, response) {
   let email = request.params.email;
   console.log('--Loading cyber leaks for--', email);
 
-  axios.get('https://api.dehashed.com/search?query=email:'+email+'&size=10000', {
+  cloudscraper.get('https://api.dehashed.com/search?query=email:'+email+'&size=10000&api', {
           headers: {
              'Accept': 'application/json',
              'Access-Control-Allow-Origin': '*',
