@@ -185,20 +185,19 @@ app.get('/cyber-leaks/:email', function(request, response) {
     url: 'https://api.dehashed.com/search?query=email:'+email+'&size=10000',
     headers: {
       'Accept': 'application/json',
-    },
-    auth: {
-      username: 'sampath.oops@gmail.com',
-      password: '6hmmriun21gzwi5gs0e4zro1g4vbu4vq'
-   }
+      'Authorization': 'Basic ' + Buffer.from('sampath.oops@gmail.com:6hmmriun21gzwi5gs0e4zro1g4vbu4vq').toString('base64'),
+    }
   })
   .then(cyberLeaksResponse => {
+    console.log('---Response1---', cyberLeaksResponse);
     if (cyberLeaksResponse != null && cyberLeaksResponse.hasOwnProperty('data')) {
       response.send(cyberLeaksResponse.data);
     } else {
       response.send('not found');
     }
   }).catch(err => {
-    console.log('---Fetch error---', err);
+    console.log('---Error1---', err);
+    response.send('error');
   });
   
       
