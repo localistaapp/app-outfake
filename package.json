@@ -23,6 +23,7 @@
     "canvas": "^2.6.1",
     "cloudscraper": "^4.6.0",
     "cloudflare-bypasser": "0.0.3",
+    "humanoid-js":"1.0.1",
     "compression-webpack-plugin": "^6.0.2",
     "cors": "2.8.5",
     "crypto": "^1.0.1",

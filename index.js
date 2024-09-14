@@ -11,10 +11,9 @@ var request= require('request');
 var { Client } = require('pg');
 var { Pool } = require('pg');
 var axios = require('axios');
+const Humanoid = require("humanoid-js");
 var crypto = require('crypto');
 var QRCode = require('qrcode');
-var cors = require('cors');
-const cloudscraper = require('cloudscraper');
 //var mergeImages = require('merge-images');
 var base64 = require('file-base64');
 //const { Canvas, Image } = require('canvas');
@@ -172,33 +171,50 @@ console.log('--Token URL:--', tokenUrl);
 
 });
 
-app.use(cors());
-app.use(cors({ origin : '*'}));
-
 app.get('/cyber-leaks/:email', function(request, response) {
   let email = request.params.email;
   console.log('--Loading cyber leaks for--', email);
 
-  let options = {
-    uri: 'https://api.dehashed.com/search?query=email:'+email+'&size=10000',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.9',
-         'Authorization': 'Basic ' + Buffer.from('sampath.oops@gmail.com:6hmmriun21gzwi5gs0e4zro1g4vbu4vq').toString('base64')
-      }
-  };
-  cloudscraper.get(options).then(cyberLeaksResponse => {
-      console.log('--Response from cyber leaks--', cyberLeaksResponse);
-      if (cyberLeaksResponse != null && cyberLeaksResponse.hasOwnProperty('data')) {
-        response.send(cyberLeaksResponse.data);
-      } else {
-        response.send('not found');
-      }
-    }).catch(err => {
-      console.log('---Fetch error---', err);
-      response.send('error');
-    });
+  let humanoid = new Humanoid();
+
+  humanoid.get('https://api.dehashed.com/search?query=email:'+email+'&size=10000', '', {
+    'Accept': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': '*',
+    'Access-Control-Allow-Credentials': 'true',
+    'Authorization': 'Basic ' + Buffer.from('sampath.oops@gmail.com:6hmmriun21gzwi5gs0e4zro1g4vbu4vq').toString('base64'),
+ })
+    .then(res => {
+      console.log('--res success--');
+    	console.log(res.body) // <!DOCTYPE html><html lang="en">...
+    })
+    .catch(err => {
+      console.log('--res error--');
+    	console.error(err)
+    })
+
+  /*axios.get('https://api.dehashed.com//search?query=email:'+email+'&size=10000', {
+          headers: {
+             'Accept': 'application/json',
+             'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Headers': '*',
+              'Access-Control-Allow-Credentials': 'true'
+          },
+          auth: {
+             username: 'sampath.oops@gmail.com',
+             password: '6hmmriun21gzwi5gs0e4zro1g4vbu4vq'
+          }
+       }).then(cyberLeaksResponse => {
+          //console.log('--Response from cyber leaks--', cyberLeaksResponse.data);
+          if (cyberLeaksResponse != null && cyberLeaksResponse.hasOwnProperty('data')) {
+            response.send(cyberLeaksResponse.data);
+          } else {
+            response.send('not found');
+          }
+       }).catch(err => {
+          console.log('---Fetch error---', err);
+       });*/
+      
 });
 
 app.post('/payment-pg-success', (req, res) => {
