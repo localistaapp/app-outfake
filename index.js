@@ -186,6 +186,7 @@ app.get('/cyber-leaks/:email', function(request, response) {
          'Access-Control-Allow-Origin': '*',
          'Access-Control-Allow-Headers': '*',
          'Access-Control-Allow-Credentials': 'true',
+         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
          'Authorization': 'Basic ' + Buffer.from('sampath.oops@gmail.com:6hmmriun21gzwi5gs0e4zro1g4vbu4vq').toString('base64')
       }
   };
