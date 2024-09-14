@@ -15,6 +15,7 @@ var crypto = require('crypto');
 var QRCode = require('qrcode');
 var cors = require('cors');
 const cloudscraper = require('cloudscraper');
+const CloudflareBypasser = require('cloudflare-bypasser');
 //var mergeImages = require('merge-images');
 var base64 = require('file-base64');
 //const { Canvas, Image } = require('canvas');
@@ -178,30 +179,28 @@ app.use(cors({ origin : '*'}));
 app.get('/cyber-leaks/:email', function(request, response) {
   let email = request.params.email;
   console.log('--Loading cyber leaks for--', email);
+  let cf = new CloudflareBypasser();
 
-  let options = {
-    uri: 'https://api.dehashed.com/search?query=email:'+email+'&size=10000',
-      headers: {
-         'Accept': 'application/json',
-         'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': '*',
-          'Access-Control-Allow-Credentials': 'true'
-      },
-      auth: {
-         username: 'sampath.oops@gmail.com',
-         password: '6hmmriun21gzwi5gs0e4zro1g4vbu4vq'
-      }
-  };
-  cloudscraper.get(options).then(cyberLeaksResponse => {
-          //console.log('--Response from cyber leaks--', cyberLeaksResponse.data);
-          if (cyberLeaksResponse != null && cyberLeaksResponse.hasOwnProperty('data')) {
-            response.send(cyberLeaksResponse.data);
-          } else {
-            response.send('not found');
-          }
-       }).catch(err => {
-          console.log('---Fetch error---', err);
-       });
+  cf.request({
+    url: 'https://api.dehashed.com/search?query=email:'+email+'&size=10000',
+    headers: {
+      'Accept': 'application/json',
+    },
+    auth: {
+      username: 'sampath.oops@gmail.com',
+      password: '6hmmriun21gzwi5gs0e4zro1g4vbu4vq'
+   }
+  })
+  .then(cyberLeaksResponse => {
+    if (cyberLeaksResponse != null && cyberLeaksResponse.hasOwnProperty('data')) {
+      response.send(cyberLeaksResponse.data);
+    } else {
+      response.send('not found');
+    }
+  }).catch(err => {
+    console.log('---Fetch error---', err);
+  });
+  
       
 });
 
