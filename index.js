@@ -15,7 +15,6 @@ var crypto = require('crypto');
 var QRCode = require('qrcode');
 var cors = require('cors');
 const cloudscraper = require('cloudscraper');
-const CloudflareBypasser = require('cloudflare-bypasser');
 //var mergeImages = require('merge-images');
 var base64 = require('file-base64');
 //const { Canvas, Image } = require('canvas');
@@ -179,28 +178,28 @@ app.use(cors({ origin : '*'}));
 app.get('/cyber-leaks/:email', function(request, response) {
   let email = request.params.email;
   console.log('--Loading cyber leaks for--', email);
-  let cf = new CloudflareBypasser();
 
-  cf.request({
-    url: 'https://api.dehashed.com/search?query=email:'+email+'&size=10000',
-    headers: {
-      'Accept': 'application/json',
-      'Authorization': 'Basic ' + Buffer.from('sampath.oops@gmail.com:6hmmriun21gzwi5gs0e4zro1g4vbu4vq').toString('base64'),
-    }
-  })
-  .then(cyberLeaksResponse => {
-    console.log('---Response1---', cyberLeaksResponse);
-    if (cyberLeaksResponse != null && cyberLeaksResponse.hasOwnProperty('data')) {
-      response.send(cyberLeaksResponse.data);
-    } else {
-      response.send('not found');
-    }
-  }).catch(err => {
-    console.log('---Error1---', err);
-    response.send('error');
-  });
-  
-      
+  let options = {
+    uri: 'https://api.dehashed.com/search?query=email:'+email+'&size=10000',
+      headers: {
+         'Accept': 'application/json',
+         'Access-Control-Allow-Origin': '*',
+         'Access-Control-Allow-Headers': '*',
+         'Access-Control-Allow-Credentials': 'true',
+         'Authorization': 'Basic ' + Buffer.from('sampath.oops@gmail.com:6hmmriun21gzwi5gs0e4zro1g4vbu4vq').toString('base64')
+      }
+  };
+  cloudscraper.get(options).then(cyberLeaksResponse => {
+      console.log('--Response from cyber leaks--', cyberLeaksResponse);
+      if (cyberLeaksResponse != null && cyberLeaksResponse.hasOwnProperty('data')) {
+        response.send(cyberLeaksResponse.data);
+      } else {
+        response.send('not found');
+      }
+    }).catch(err => {
+      console.log('---Fetch error---', err);
+      response.send('error');
+    });
 });
 
 app.post('/payment-pg-success', (req, res) => {
