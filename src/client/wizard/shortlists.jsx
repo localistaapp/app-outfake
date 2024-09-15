@@ -35,18 +35,10 @@ class Shortlists extends Component {
            } else {
               let fetchUrl =  '/cyber-leaks/'+email;
               let cyberLeaksStr = 0;
-              const response = await axios.get(fetchUrl, {
-                 headers: {
-                    'Accept': 'application/json'
-                 },
-                 auth: {
-                    username: 'sampath.oops@gmail.com',
-                    password: '6hmmriun21gzwi5gs0e4zro1g4vbu4vq'
-                 }
-              });
+              const response = await axios.get(fetchUrl);
               console.log('--cyber leaks response--', response);
-              if (response && response.data.total && response.data.entries) {
-                let res = {entries: response.data.entries, total: response.data.total};
+              if (response && response.data.found && response.data.result) {
+                let res = {entries: response.data.result, total: response.data.found};
                  cyberLeaksStr = JSON.stringify(res);
                  localStorage.setItem('user-cyber-leaks-'+email, cyberLeaksStr);
                  return cyberLeaksStr;
@@ -58,13 +50,7 @@ class Shortlists extends Component {
         let leaks = JSON.parse(leaksStr);
         console.log('--leaks--', leaks);
         let entries = leaks.entries;
-        let entryAddressLeaks = entries.filter((a) => a.address != '');
-        let phoneNumberLeaks = entries.filter((a) => a.phone != '');
-        let hashedPasswordLeaks = entries.filter((a) => a.hashed_password != '');
-        let ipAddressLeaks = entries.filter((a) => a.ip_address != '');
-        let numLeaks = leaks.total;
-        let leaksArr = [...entryAddressLeaks, ...phoneNumberLeaks, ...hashedPasswordLeaks, ...ipAddressLeaks];
-        let str1 = '<table style="margin-left:48px">';
+         let str1 = '<table style="margin-left:48px">';
         let str2 = '</table>';
         let strArr = [];
         
@@ -74,22 +60,33 @@ class Shortlists extends Component {
         for(var i=0;i<entries.length-1;i++) {
            let strLeaksStr = '';
            //if(entries[i].address != '') {
-            strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Address:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].address}</td></tr>`;
+            strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Address:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].address || ''}</td></tr>`;
             attributesExposed = 'Address';
            //}
            //if(entries[i].phone != '') {
-              strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Phone Number:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].phone}</td></tr>`;
+              strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Phone Number:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].phone || ''}</td></tr>`;
               attributesExposed += ' Phone number';
            //}
            //if(entries[i].hashed_password != '') {
-              strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Hashed Password:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].hashed_password}</td></tr>`;
-              attributesExposed += ' Hashed password';
+              strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Password:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].password || ''}</td></tr>`;
+              attributesExposed += ' Password';
            //}
            //if(entries[i].ip_address != '') {
-              strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Location/IP:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].ip_address}</td></tr>`;
+              strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Location/IP:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].ip || ''}</td></tr>`;
               attributesExposed += ' Location';
            //}
-           let appName = entries[i].database_name;
+           strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Email:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].email || ''}</td></tr>`;
+              attributesExposed += ' Email';
+
+              strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Location/ZIP:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].zip || ''}</td></tr>`;
+              attributesExposed += ' Zip Code';
+
+           let appName = '';
+           if(entries[i].hasOwnProperty('source') && entries[i].source.hasOwnProperty('name')) {
+                appName = entries[i].source.name;
+           } else {
+                appName = entries[i].database_name;
+           }
            let appImgUrl = '';
            if (appName.indexOf('www') != -1) {
               appName = appName.substr(appName.indexOf('www'),appName.indexOf('.com')+4);
@@ -212,7 +209,7 @@ class Shortlists extends Component {
                        <div class="flex flex-wrap items-center justify-between -m-4 pb-12 pb-6">
                           <div class="w-full md:w-1/2 p-0 p-0" style={{paddingBottom: '0.6rem',paddingLeft: '1rem',display: 'flex'}}>
                              <img src="../psassets/warning.png" style={{width: '48px'}}/>
-                             <h2 class="font-heading md:text-5xl text-gray-900 font-black tracking-tight text-3xl" data-config-id="text11" style={{color: '#ff4747',fontSize: '1.5rem',marginTop: '8px'}}>{this.state.leaksCount} <span style={{textDecoration: 'underline'}}>cyber leaks</span> found!</h2>
+                             <h2 class="font-heading md:text-5xl text-gray-900 font-black tracking-tight text-3xl" data-config-id="text11" style={{color: '#000',fontSize: '1.5rem',marginTop: '8px'}}>{this.state.leaksCount} <span style={{color: 'red'}}>cyber leaks</span> found!</h2>
                           </div>
                           
                        </div>

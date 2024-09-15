@@ -172,14 +172,12 @@ console.log('--Token URL:--', tokenUrl);
 
 app.get('/cyber-leaks/:email', function(request, response) {
   let email = request.params.email;
-  console.log('--Loading cyber leaks for--', email);
 
   axios.get('https://leakcheck.io/api/v2/query/'+email, {
     headers: {
     'Accept': 'application/json',
     'X-API-Key': '928cbc88988acd70188030109ee9f24080955071',
   }}).then(cyberLeaksResponse => {
-          console.log('--Response from cyber leaks--', cyberLeaksResponse.data);
           if (cyberLeaksResponse != null && cyberLeaksResponse.hasOwnProperty('data')) {
             response.send(cyberLeaksResponse.data);
           } else {
