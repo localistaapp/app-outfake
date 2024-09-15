@@ -11,7 +11,6 @@ var request= require('request');
 var { Client } = require('pg');
 var { Pool } = require('pg');
 var axios = require('axios');
-const Humanoid = require("humanoid-js");
 var crypto = require('crypto');
 var QRCode = require('qrcode');
 //var mergeImages = require('merge-images');
@@ -175,37 +174,12 @@ app.get('/cyber-leaks/:email', function(request, response) {
   let email = request.params.email;
   console.log('--Loading cyber leaks for--', email);
 
-  let humanoid = new Humanoid();
-
-  humanoid.get('https://api.dehashed.com/search?query=email:'+email+'&size=10000', '', {
+  axios.get('https://leakcheck.io/api/v2/query/'+email, {
+    headers: {
     'Accept': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': '*',
-    'Access-Control-Allow-Credentials': 'true',
-    'Authorization': 'Basic ' + Buffer.from('sampath.oops@gmail.com:6hmmriun21gzwi5gs0e4zro1g4vbu4vq').toString('base64'),
- })
-    .then(res => {
-      console.log('--res success--');
-    	console.log(res.body) // <!DOCTYPE html><html lang="en">...
-    })
-    .catch(err => {
-      console.log('--res error--');
-    	console.error(err)
-    })
-
-  /*axios.get('https://api.dehashed.com//search?query=email:'+email+'&size=10000', {
-          headers: {
-             'Accept': 'application/json',
-             'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Headers': '*',
-              'Access-Control-Allow-Credentials': 'true'
-          },
-          auth: {
-             username: 'sampath.oops@gmail.com',
-             password: '6hmmriun21gzwi5gs0e4zro1g4vbu4vq'
-          }
-       }).then(cyberLeaksResponse => {
-          //console.log('--Response from cyber leaks--', cyberLeaksResponse.data);
+    'X-API-Key': '928cbc88988acd70188030109ee9f24080955071',
+  }}).then(cyberLeaksResponse => {
+          console.log('--Response from cyber leaks--', cyberLeaksResponse.data);
           if (cyberLeaksResponse != null && cyberLeaksResponse.hasOwnProperty('data')) {
             response.send(cyberLeaksResponse.data);
           } else {
@@ -213,7 +187,7 @@ app.get('/cyber-leaks/:email', function(request, response) {
           }
        }).catch(err => {
           console.log('---Fetch error---', err);
-       });*/
+       });
       
 });
 
