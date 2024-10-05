@@ -56,6 +56,8 @@ class Shortlists extends Component {
         
         let attributesExposed ='';
         let linkTemplateHTML = '';
+        let isSamePasswordExposed = false;
+        let passwordArr = [];
         this.setState({leaksCount: entries.length});
         for(var i=0;i<entries.length-1;i++) {
            let strLeaksStr = '';
@@ -71,6 +73,9 @@ class Shortlists extends Component {
               strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Password:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].password || ''}</td></tr>`;
               attributesExposed += ' Password';
            //}
+           if(entries[i].hasOwnProperty('password') && passwordArr.indexOf(entries[i].password) !== -1) {
+            isSamePasswordExposed = true;
+           }
            //if(entries[i].ip_address != '') {
               strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Location/IP:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].ip || ''}</td></tr>`;
               attributesExposed += ' Location';
@@ -80,6 +85,8 @@ class Shortlists extends Component {
 
               strLeaksStr += `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;">Location/ZIP:</td><td style="max-width: 150px !important;overflow-x:scroll;">${entries[i].zip || ''}</td></tr>`;
               attributesExposed += ' Zip Code';
+
+              passwordArr.push(entries[i].password);
 
            let appName = '';
            if(entries[i].hasOwnProperty('source') && entries[i].source.hasOwnProperty('name')) {
@@ -104,7 +111,10 @@ class Shortlists extends Component {
         }
   
         console.log('---linkTemplateHTML---', linkTemplateHTML);
-        this.setState({exposures: `<div class="flex flex-wrap -m-3 mb-10">${linkTemplateHTML}</div><br><br><br></br>`});
+        if (passwordArr.length < 1) {
+         this.setState({passwordExposed: false});
+        }
+        this.setState({exposures: `<div class="flex flex-wrap -m-3 mb-10">${linkTemplateHTML}</div><br><br><br></br>`,isSamePasswordExposed: isSamePasswordExposed, riskLevel: isSamePasswordExposed || entries.length > 3 ? 'High' : 'Moderate'});
         this.setState({currStep: 2, messageTxt: 'Your personal data including your <b>address</b> has been exposed on dark web.'});
      }
      login() {
@@ -119,10 +129,36 @@ class Shortlists extends Component {
         //console.log('userEmail: ', this.state.userEmail);
         }
      }
+     showRiskLevel() {
+      this.setState({loading: false, messageTxt: 'Follow all the recommendations below to ensure your cyber safety.', displayRiskLevel: true});
+      let linkTemplateHTML1 = '';
+      let sectionKey = 'passwordNotExposed';
+      if(this.state.isSamePasswordExposed) {
+         sectionKey = 'isSamePasswordExposed';
+      } else if(this.state.passwordExposed) {
+         sectionKey = 'passwordExposed';
+      }
+      let section1Para1 = this.sectionImmediateRisks[this.state.riskLevel][sectionKey]['para1'];
+      let section1Para2 = this.sectionImmediateRisks[this.state.riskLevel][sectionKey]['para2'];
+      let linkTemplateMain = '<div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl" x-data="{ accordion: false }" x-on:click="accordion = !accordion"><div class="-m-2 flex flex-wrap"><div class="p-2 flex-1"><div style="display:flex"><img src="../psassets/num1s.png" style="width:36px;height:36px;border-radius:8px"><h3 class="font-black font-heading text-gray-900 text-l" data-config-id="txt-b0bdec-2" style="margin-top:5px;margin-left:12px;overflow:hidden;white-space:nowrap;width:223px">Know your risks</h3></div><div class="duration-500 h-0 overflow-hidden" :style="accordion ? \'height: \' + $refs.container.scrollHeight + \'px\' : \'\'" x-ref="container"><p class="font-bold mt-4 text-black-500" data-config-id="txt-b0bdec-7" style="font-family:Quicksand;font-weight:500"><table style="margin-left:18px">{trHTML}</table></div></div><div class="p-2 w-auto"><span class="inline-block rotate-0 transform"><svg data-config-id="svg-b0bdec-1" fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z" fill="#D1D5DB"></path></svg></span></div></div></div></div>';
+      let strLeaksStr = `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;"><img style="width:120px;border-radius: 8px;" src="../psassets/clickbait.png"></td><td style="max-width: 150px !important;overflow-x:scroll;padding-left: 14px;vertical-align: top;">${section1Para1}<br/><br/>${section1Para2}</td></tr>`;
+      linkTemplateHTML1 += linkTemplateMain.replaceAll('{trHTML}',strLeaksStr);
+
+      let linkTemplateHTML2 = '';
+      let linkTemplateMain2 = '<div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl" x-data="{ accordion: false }" x-on:click="accordion = !accordion"><div class="-m-2 flex flex-wrap"><div class="p-2 flex-1"><div style="display:flex"><img src="../psassets/num2.png" style="width:36px;height:36px;border-radius:8px"><h3 class="font-black font-heading text-gray-900 text-l" data-config-id="txt-b0bdec-2" style="margin-top:5px;margin-left:12px;overflow:hidden;white-space:nowrap;width:223px">Immediate fixes</h3></div><div class="duration-500 h-0 overflow-hidden" :style="accordion ? \'height: \' + $refs.container.scrollHeight + \'px\' : \'\'" x-ref="container"><p class="font-bold mt-4 text-black-500" data-config-id="txt-b0bdec-7" style="font-family:Quicksand;font-weight:500"><table style="margin-left:18px">{trHTML}</table></div></div><div class="p-2 w-auto"><span class="inline-block rotate-0 transform"><svg data-config-id="svg-b0bdec-1" fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z" fill="#D1D5DB"></path></svg></span></div></div></div></div>';
+      let strLeaksStr2 = `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;"><img style="width:120px;border-radius: 8px;" src="../psassets/clickbait.png"></td><td style="max-width: 150px !important;overflow-x:scroll;padding-left: 14px;vertical-align: top;">Follow the recommendations below to ensure your cyber safety. Follow the recommendations below to ensure your cyber safety.</td></tr>`;
+      linkTemplateHTML2 += linkTemplateMain2.replaceAll('{trHTML}',strLeaksStr2);
+
+      let linkTemplateHTML3 = '';
+      let linkTemplateMain3 = '<div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl" x-data="{ accordion: false }" x-on:click="accordion = !accordion"><div class="-m-2 flex flex-wrap"><div class="p-2 flex-1"><div style="display:flex"><img src="../psassets/num3.png" style="width:36px;height:36px;border-radius:8px"><h3 class="font-black font-heading text-gray-900 text-l" data-config-id="txt-b0bdec-2" style="margin-top:5px;margin-left:12px;overflow:hidden;white-space:nowrap;width:223px">Activate Free plan</h3></div><div class="duration-500 h-0 overflow-hidden" :style="accordion ? \'height: \' + $refs.container.scrollHeight + \'px\' : \'\'" x-ref="container"><p class="font-bold mt-4 text-black-500" data-config-id="txt-b0bdec-7" style="font-family:Quicksand;font-weight:500"><table style="margin-left:18px">{trHTML}</table></div></div><div class="p-2 w-auto"><span class="inline-block rotate-0 transform"><svg data-config-id="svg-b0bdec-1" fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z" fill="#D1D5DB"></path></svg></span></div></div></div></div>';
+      let strLeaksStr3 = `<tr><td style="font-weight:700;max-width: 100px !important;vertical-align: top;"><img style="width:120px;border-radius: 8px;" src="../psassets/clickbait.png"></td><td style="max-width: 150px !important;overflow-x:scroll;padding-left: 14px;vertical-align: top;">Follow the recommendations below to ensure your cyber safety. Follow the recommendations below to ensure your cyber safety.</td></tr>`;
+      linkTemplateHTML3 += linkTemplateMain3.replaceAll('{trHTML}',strLeaksStr3);
+      this.setState({ensureSafetyHTML: `<div class="flex flex-wrap -m-3 mb-10">${linkTemplateHTML1}${linkTemplateHTML2}${linkTemplateHTML3}</div><br><br><br></br>`});
+     }
      constructor(props) {
         super(props);
         this.leakTemplate = `<div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl" x-data="{ accordion: false }" x-on:click="accordion = !accordion"><div class="-m-2 flex flex-wrap"><div class="p-2 flex-1"><div style="display:flex"><img src="https://img.logo.dev/{AppName}?token=pk_G0TzXJmeR22hjyoG7hROlQ" style="width:36px;height:36px;border-radius:8px"><h3 class="font-black font-heading text-gray-900 text-l" data-config-id="txt-b0bdec-2" style="margin-top:5px;margin-left:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:200px">{dbname} likely exposures - {AttributesExposed}</h3></div><div class="duration-500 h-0 overflow-hidden" :style="accordion ? 'height: ' + $refs.container.scrollHeight + 'px' : ''" x-ref="container"><p class="font-bold mt-4 text-black-500" data-config-id="txt-b0bdec-7" style="font-family:Quicksand;font-weight:500"><table style="margin-left:18px">{trHTML}</table></div></div><div class="p-2 w-auto"><span class="inline-block rotate-0 transform"><svg data-config-id="svg-b0bdec-1" fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z" fill="#D1D5DB"></path></svg></span></div></div></div></div>`;
-        this.state = {currStep: 1, loading: false, leaksCount: '', messageTxt: 'Enter your active email ID to continue', userEmail: '', exposures: `<div class="flex flex-wrap -m-3 mb-10">${this.leakTemplate}</div><br><br><br>`};
+        this.state = {currStep: 1, loading: false, leaksCount: '', isSamePasswordExposed: false, passwordExposed: true, displayRiskLevel: false, riskLevel: '', messageTxt: 'Enter your active email ID to continue', userEmail: '', exposures: `<div class="flex flex-wrap -m-3 mb-10">${this.leakTemplate}</div><br><br><br>`};
      }
      componentDidMount() {
         window.viewportCheck = setInterval(()=> {
@@ -130,6 +166,7 @@ class Shortlists extends Component {
               this.tempTimer();
            }
         },2000);
+        this.sectionImmediateRisks = {"High":{"isSamePasswordExposed":{"para1":"You are at real high risk as you have the same passwords used across sites and they are exposed in the dark web.","para2":"You should watch out for suspicious links and social online scammers."},"passwordExposed":{"para1":"You are at high risk as you have your  passwords exposed in the dark web that makes you vulnerable for man-in-the-middle attacks.","para2":"You should watch out for suspicious websites and online scammers."},"passwordNotExposed":{"para1":"You are at high risk as you have your  personal data exposed in the dark web that makes you vulnerable for cyber attacks.","para2":"You should watch out for suspicious websites and online scammers."}},"Moderate":{"isSamePasswordExposed":{"para1":"You are at high risk as you have the same passwords used across sites and they are exposed in the dark web.","para2":"You should watch out for suspicious links and social online scammers."},"passwordExposed":{"para1":"You are at moderate risk as you have your  password exposed in the dark web that makes you vulnerable for man-in-the-middle attacks.","para2":"You should watch out for suspicious websites and online scammers."},"passwordNotExposed":{"para1":"You are at moderate risk as you have your  personal data exposed in the dark web that makes you vulnerable for cyber attacks.","para2":"You should watch out for suspicious websites and online scammers."}}};
      }
     render() {
       return (
@@ -205,7 +242,7 @@ class Shortlists extends Component {
                  </div>}
                  {this.state.currStep == 2 && <div id="checker-step2" class="container mx-auto px-4 py-6" style={{background: '#f3f4f6'}}>
                  <div class="px-8 pt-16 bg-white border border-gray-100 rounded-t-3xl pad-0" style={{background: 'none'}}>
-                    <div class="max-w-7xl mx-auto">
+                    {!this.state.displayRiskLevel && <div class="max-w-7xl mx-auto">
                        <div class="flex flex-wrap items-center justify-between -m-4 pb-12 pb-6">
                           <div class="w-full md:w-1/2 p-0 p-0" style={{paddingBottom: '0.6rem',paddingLeft: '1rem',display: 'flex'}}>
                              <img src="../psassets/warning.png" style={{width: '48px'}}/>
@@ -213,7 +250,17 @@ class Shortlists extends Component {
                           </div>
                           
                        </div>
-                    </div>
+                    </div>}
+                    {this.state.displayRiskLevel && <div class="max-w-7xl mx-auto">
+                       <div class="flex flex-wrap items-center justify-between -m-4 pb-12 pb-6">
+                          <div class="w-full md:w-1/2 p-0 p-0" style={{paddingBottom: '0.6rem',paddingLeft: '1rem',display: 'flex'}}>
+                           <h2 class="font-heading md:text-4xl text-gray-900 font-black tracking-tight text-2xl" >Your</h2>
+                             <h2 class="font-heading md:text-5xl text-gray-900 font-black tracking-tight text-2xl" data-config-id="text11" style={{color: '#000',fontSize: '1.5rem',marginLeft: '7px',fontWeight: 'bold'}}> Risk Level:</h2>
+                              <img class="custom-icon" src={`../psassets/riskLevel${this.state.riskLevel}.png`} alt="" className='risk-level'></img><span class="font-heading md:text-4xl text-gray-900 font-black tracking-tight text-1xl" style={{position: 'relative', left: '8px', top: '4px', fontSize: '0.9rem'}}>{this.state.riskLevel == 'Moderate' ? 'Medium' : 'High'}</span>
+                          </div>
+                          
+                       </div>
+                    </div>}
                  </div>
                  <div class="relative px-8">
                     <div class="max-w-7xl mx-auto">
@@ -222,17 +269,17 @@ class Shortlists extends Component {
                           <div x-ref="slide1" class="flex-shrink-0 max-w-sm w-full p-0">
                              <div class="flex flex-col justify-between p-8 h-full bg-gray-100 border border-gray-100 rounded-3xl shadow-md p-4 fheight m-4" style={{height: '143px',background:'#fff'}} contenteditable="false">
                                 <div class="flex-initial mb-0 mb-0" style={{display: 'inline-table'}}>
-                                <img className='custom-icon' src="../psassets/binary2.png" alt="" />
+                                <img className='custom-icon' src={this.state.displayRiskLevel ? `../psassets/shield1.png` : `../psassets/binary2.png`} alt="" />
                                 <p id="messageSpan" style={{paddingLeft: '16px',display: 'table-cell',verticalAlign: 'top'}} class="text-lg text-gray-700 custom-msg" dangerouslySetInnerHTML={{__html:this.state.messageTxt}}></p>
                                 </div>
                                 <div class="flex flex-wrap -m-2">
-                             <div class="w-full md:w-auto p-2 float-bottom" id="risk-checker-cta"><a class="block w-full px-8 py-3.5 text-lg text-center text-white font-bold bg-gray-900 hover:bg-gray-800 focus:ring-4 focus:ring-gray-600 rounded-full" onclick="document.getElementById('risk-checker').style.display='block';document.getElementById('content').style.display='none';document.getElementById('risk-checker').scrollIntoView({ behavior: 'smooth'});" data-config-id="text3">Fix Cyber Leaks</a></div>
+                             {this.state.displayRiskLevel == false && <div class="w-full md:w-auto p-2 float-bottom" id="risk-checker-cta"><a class="block w-full px-8 py-3.5 text-lg text-center text-white font-bold bg-gray-900 hover:bg-gray-800 focus:ring-4 focus:ring-gray-600 rounded-full" onClick={()=>{this.showRiskLevel()}} data-config-id="text3">Next (2/3)</a></div>}
                           </div>
                              </div>
                           </div>
                           </div>
                        </div>
-                       <div class="max-w-3xl mx-auto" style={{background: 'white',padding: '0px',position: 'absolute',zIndex: 1,top: '200px',left:'0px'}} dangerouslySetInnerHTML={{__html: this.state.exposures}}>
+                       <div class="max-w-3xl mx-auto" style={{background: 'white',padding: '0px',position: 'absolute',zIndex: 1,top: '200px',left:'0px', width: '100%'}} dangerouslySetInnerHTML={{__html: this.state.displayRiskLevel ? this.state.ensureSafetyHTML : this.state.exposures}}>
   
                        </div>
                        
