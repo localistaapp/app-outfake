@@ -130,6 +130,7 @@ class Shortlists extends Component {
         }
      }
      showRiskLevel() {
+      window.scrollTo({  top: 0, behavior: 'smooth' });
       this.setState({loading: false, messageTxt: 'Follow all the recommendations below to ensure your cyber safety.', displayRiskLevel: true});
       let linkTemplateHTML1 = '';
       let sectionKey = 'passwordNotExposed';
