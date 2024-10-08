@@ -276,7 +276,7 @@ class Shortlists extends Component {
                                 </div>
                                 <div class="flex flex-wrap -m-2">
                              {this.state.displayRiskLevel == false && <div class="w-full md:w-auto p-2 float-bottom" id="risk-checker-cta"><a class="block w-full px-8 py-3.5 text-lg text-center text-white font-bold bg-gray-900 hover:bg-gray-800 focus:ring-4 focus:ring-gray-600 rounded-full" onClick={()=>{this.showRiskLevel()}} data-config-id="text3">Next (2/3)</a></div>}
-                             <div class="w-full md:w-auto p-2 float-bottom" id="activateBtn" style={{display: 'none'}}><a class="block w-full px-8 py-3.5 text-lg text-center text-white font-bold bg-gray-900 hover:bg-gray-800 focus:ring-4 focus:ring-gray-600 rounded-full" onClick={()=>{this.activate()}} data-config-id="text3">Activate Free Plan</a></div>
+                             <div class="w-full md:w-auto p-2 float-bottom" id="activateBtn" style={{display: 'none'}}><a class="block w-full px-8 py-3.5 text-lg text-center text-white font-bold bg-gray-900 hover:bg-gray-800 focus:ring-4 focus:ring-gray-600 rounded-full" href="#popup2" onClick={()=>{document.querySelector('#addToHome').play();}} data-config-id="text3">Activate Free Plan</a></div>
                           </div>
                              </div>
                           </div>
@@ -285,6 +285,17 @@ class Shortlists extends Component {
                        <div class="max-w-3xl mx-auto" style={{background: 'white',padding: '0px',position: 'absolute',zIndex: 1,top: '200px',left:'0px', width: '100%'}} dangerouslySetInnerHTML={{__html: this.state.displayRiskLevel ? this.state.ensureSafetyHTML : this.state.exposures}}>
   
                        </div>
+                       <div id="popup2" className="popup-container popup-style-2">
+                        <div className="popup-content">
+                           <a href="#" className="close">&times;</a>
+                           <h3 style={{color: '#1d4dd6', fontWeight: 'bold', fontSize: '1.1rem'}}>Install Proveshare</h3>
+                           <p>Choose "Add to Homescreen" on your browser to activate your free plan.</p>
+                           <br/>
+                           <video id="addToHome" loop="true" controls width="84%" style={{borderRadius: '12px',margin: '0 auto'}}>
+                              <source type="video/mp4" src="../psassets/addtohome.mp4" />
+                           </video>
+                        </div>
+                        </div>
                        
                     </div>
                  </div>}
