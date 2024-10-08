@@ -291,7 +291,7 @@ class Shortlists extends Component {
                            <h3 style={{color: '#1d4dd6', fontWeight: 'bold', fontSize: '1.1rem'}}>Install Proveshare</h3>
                            <p>Choose "Add to Homescreen" on your browser to activate your free plan.</p>
                            <br/>
-                           <video id="addToHome" loop="true" controls width="84%" style={{borderRadius: '12px',margin: '0 auto'}}>
+                           <video id="addToHome" loop="true" controlsList="nofullscreen"  webkit-playsinline playsinline controls width="84%" style={{borderRadius: '12px',margin: '0 auto'}}>
                               <source type="video/mp4" src="../psassets/addtohome.mp4" />
                            </video>
                         </div>
