@@ -574,22 +574,27 @@
       <script type="text/javascript">
          document.addEventListener('DOMContentLoaded', function() {
 
-            const parsedUrl = new URL(window.location);
-             if (parsedUrl.searchParams.get('title') != null || parsedUrl.searchParams.get('title') != '') {
-               var contentElem = document.createElement('div');
-               contentElem.innerHTML = parsedUrl.searchParams.get('title');
-               document.body.appendChild(contentElem);
-             }
-             if (parsedUrl.searchParams.get('text') != null || parsedUrl.searchParams.get('text') != '') {
-               var contentElem = document.createElement('div');
-               contentElem.innerHTML = parsedUrl.searchParams.get('text');
-               document.body.appendChild(contentElem);
-             }
-             if (parsedUrl.searchParams.get('url') != null || parsedUrl.searchParams.get('url') != '') {
-               var contentElem = document.createElement('div');
-               contentElem.innerHTML = parsedUrl.searchParams.get('url');
-               document.body.appendChild(contentElem);
-             }
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.enctype = 'multipart/form-data';
+            
+            const data = new FormData(form); // Normally this would be passed via the event.
+
+            // Fetch shared title/text
+            const sharedTitle = data.get('title');
+            const sharedText = data.get('text');
+            const sharedUrl = data.get('url');
+
+            console.log('Shared title:', sharedTitle);
+            console.log('Shared text:', sharedText);
+            console.log('Shared URL:', sharedUrl);
+
+            // Fetch shared files
+            const sharedFile = data.get('file'); // This will return the first file
+            if (sharedFile) {
+                console.log('Shared file:', sharedFile.name);
+                //processFile(sharedFile);
+            }
 
          //text slider
          const containerEl = document.getElementById('hero-rotating-text');

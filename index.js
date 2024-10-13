@@ -952,6 +952,10 @@ app.get("/home/", function(request, response) {
   response.sendFile(path.resolve(__dirname, 'public', 'shortlists.html'));
 });
 
+app.post("/home/", function(request, response) {
+  response.sendFile(path.resolve(__dirname, 'public', 'shortlists.html'));
+});
+
 app.get("/events/v1", function(request, response) {
   response.sendFile(path.resolve(__dirname, 'public', 'v1cred.html'));
 });
