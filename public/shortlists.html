@@ -573,6 +573,24 @@
       </style>
       <script type="text/javascript">
          document.addEventListener('DOMContentLoaded', function() {
+
+            const parsedUrl = new URL(window.location);
+             if (parsedUrl.searchParams.get('title') != null || parsedUrl.searchParams.get('title') != '') {
+               var contentElem = document.createElement('div');
+               contentElem.innerHTML = parsedUrl.searchParams.get('title');
+               document.body.appendChild(contentElem);
+             }
+             if (parsedUrl.searchParams.get('text') != null || parsedUrl.searchParams.get('text') != '') {
+               var contentElem = document.createElement('div');
+               contentElem.innerHTML = parsedUrl.searchParams.get('text');
+               document.body.appendChild(contentElem);
+             }
+             if (parsedUrl.searchParams.get('url') != null || parsedUrl.searchParams.get('url') != '') {
+               var contentElem = document.createElement('div');
+               contentElem.innerHTML = parsedUrl.searchParams.get('url');
+               document.body.appendChild(contentElem);
+             }
+
          //text slider
          const containerEl = document.getElementById('hero-rotating-text');
          const itTextEl = document.getElementById('hero-it-text');
