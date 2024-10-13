@@ -276,7 +276,7 @@ class Shortlists extends Component {
                                 </div>
                                 <div class="flex flex-wrap -m-2">
                              {this.state.displayRiskLevel == false && <div class="w-full md:w-auto p-2 float-bottom" id="risk-checker-cta"><a class="block w-full px-8 py-3.5 text-lg text-center text-white font-bold bg-gray-900 hover:bg-gray-800 focus:ring-4 focus:ring-gray-600 rounded-full" onClick={()=>{this.showRiskLevel()}} data-config-id="text3">Next (2/3)</a></div>}
-                             <div class="w-full md:w-auto p-2 float-bottom" id="activateBtn" style={{display: 'none'}}><a class="block w-full px-8 py-3.5 text-lg text-center text-white font-bold bg-gray-900 hover:bg-gray-800 focus:ring-4 focus:ring-gray-600 rounded-full" href="#popup2" onClick={()=>{document.querySelector('#addToHome').play();}} data-config-id="text3">Activate Free Plan</a></div>
+                             <div class="w-full md:w-auto p-2 float-bottom" id="activateBtn" style={{display: 'none'}}><a class="block w-full px-8 py-3.5 text-lg text-center text-white font-bold bg-gray-900 hover:bg-gray-800 focus:ring-4 focus:ring-gray-600 rounded-full" href="#popup2" onClick={()=>{document.querySelector('#addToHome').play();window.scrollTo({  top: 0, behavior: 'smooth' });}} data-config-id="text3">Activate Free Plan</a></div>
                           </div>
                              </div>
                           </div>
