@@ -940,15 +940,15 @@ app.get("/index", function(request, response) {
   response.sendFile(path.resolve(__dirname, 'public', 'guide.html'));
 });
 
-app.get("/home", function(request, response) {
-  response.redirect('/');
-});
-
 app.get("/mytasks", function(request, response) {
   response.sendFile(path.resolve(__dirname, 'public', 'mytasks.html'));
 });
 
 app.get("/checker/", function(request, response) {
+  response.sendFile(path.resolve(__dirname, 'public', 'shortlists.html'));
+});
+
+app.get("/home/", function(request, response) {
   response.sendFile(path.resolve(__dirname, 'public', 'shortlists.html'));
 });
 
