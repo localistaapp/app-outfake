@@ -160,7 +160,7 @@ class Home extends Component {
      constructor(props) {
         super(props);
         this.leakTemplate = `<div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl" x-data="{ accordion: false }" x-on:click="accordion = !accordion"><div class="-m-2 flex flex-wrap"><div class="p-2 flex-1"><div style="display:flex"><img src="https://img.logo.dev/{AppName}?token=pk_G0TzXJmeR22hjyoG7hROlQ" style="width:36px;height:36px;border-radius:8px"><h3 class="font-black font-heading text-gray-900 text-l" data-config-id="txt-b0bdec-2" style="margin-top:5px;margin-left:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:200px">{dbname} likely exposures - {AttributesExposed}</h3></div><div class="duration-500 h-0 overflow-hidden" :style="accordion ? 'height: ' + $refs.container.scrollHeight + 'px' : ''" x-ref="container"><p class="font-bold mt-4 text-black-500" data-config-id="txt-b0bdec-7" style="font-family:Quicksand;font-weight:500"><table style="margin-left:18px">{trHTML}</table></div></div><div class="p-2 w-auto"><span class="inline-block rotate-0 transform"><svg data-config-id="svg-b0bdec-1" fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z" fill="#D1D5DB"></path></svg></span></div></div></div></div>`;
-        this.state = {currStep: 2, loading: false, leaksCount: '', isSamePasswordExposed: false, passwordExposed: true, displayRiskLevel: true, riskLevel: '', messageTxt: 'Enter your active email ID to continue', userEmail: '', exposures: `<div class="flex flex-wrap -m-3 mb-10">${this.leakTemplate}</div><br><br><br>`};
+        this.state = {scanURL: '', currStep: 2, loading: false, leaksCount: '', isSamePasswordExposed: false, passwordExposed: true, displayRiskLevel: true, riskLevel: '', messageTxt: '', userEmail: '', exposures: `<div class="flex flex-wrap -m-3 mb-10">${this.leakTemplate}</div><br><br><br>`};
      }
      componentDidMount() {
         window.viewportCheck = setInterval(()=> {
@@ -169,6 +169,33 @@ class Home extends Component {
            }
         },2000);
         this.sectionImmediateRisks = {"High":{"isSamePasswordExposed":{"para1":"You are at real high risk as you have the same passwords used across sites and they are exposed in the dark web.","para2":"You should watch out for suspicious links and social online scammers."},"passwordExposed":{"para1":"You are at high risk as you have your  passwords exposed in the dark web that makes you vulnerable for man-in-the-middle attacks.","para2":"You should watch out for suspicious websites and online scammers."},"passwordNotExposed":{"para1":"You are at high risk as you have your  personal data exposed in the dark web that makes you vulnerable for cyber attacks.","para2":"You should watch out for suspicious websites and online scammers."}},"Moderate":{"isSamePasswordExposed":{"para1":"You are at high risk as you have the same passwords used across sites and they are exposed in the dark web.","para2":"You should watch out for suspicious links and social online scammers."},"passwordExposed":{"para1":"You are at moderate risk as you have your  password exposed in the dark web that makes you vulnerable for man-in-the-middle attacks.","para2":"You should watch out for suspicious websites and online scammers."},"passwordNotExposed":{"para1":"You are at moderate risk as you have your  personal data exposed in the dark web that makes you vulnerable for cyber attacks.","para2":"You should watch out for suspicious websites and online scammers."}}};
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const form = document.createElement('form');
+            //form.method = 'POST';
+            //form.enctype = 'multipart/form-data';
+            
+            //const data = new FormData(form); // Normally this would be passed via the event.
+
+            // Fetch shared title/text
+            const parsedUrl = new URL(window.location);
+            //const sharedTitle = data.get('title');
+            //const sharedText = data.get('text');
+            //const sharedUrl = data.get('url');
+
+            const sharedTitle = parsedUrl.searchParams.get('title');
+            const sharedText = parsedUrl.searchParams.get('text');
+            const sharedUrl = parsedUrl.searchParams.get('url');
+
+            console.log('Shared title:', sharedTitle);
+            console.log('Shared text:', sharedText);
+            console.log('Shared URL:', sharedUrl);
+
+            if(sharedUrl != null &&  sharedUrl != '') {
+               this.setState({scanURL: sharedUrl});
+            }
+         }.bind(this));
+      
       }
     render() {
       return (
@@ -243,6 +270,11 @@ class Home extends Component {
                     </div>
                  </div>}
                  {this.state.currStep == 2 && <div id="checker-step2" class="container mx-auto px-4 py-6" style={{background: '#f3f4f6'}}>
+                 <div class="scan wrapper">
+                     <div class="fingerprint"></div>
+                     <div class="overlay"></div>
+                        <iframe src={this.state.scanURL} frameborder="0" allowfullscreen></iframe>
+                  </div>
                  <div class="px-8 pt-16 bg-white border border-gray-100 rounded-t-3xl pad-0" style={{background: 'none'}}>
                     {!this.state.displayRiskLevel && <div class="max-w-7xl mx-auto">
                        <div class="flex flex-wrap items-center justify-between -m-4 pb-12 pb-6">

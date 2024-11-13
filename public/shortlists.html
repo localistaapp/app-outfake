@@ -570,24 +570,126 @@
          background-size: 100% 100%;
          transition: width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
          }
+         .wrapper {
+        display:inline-block;
+        position:relative;
+        }
+        .overlay {
+        opacity:0.7;
+        background:#fff;
+        display:block;
+        height:100%;
+        position:absolute;
+        width:100%;
+        z-index: 1;
+        }
+
+         .scan {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        }
+        .scan .fingerprint {
+        position: relative;
+        width: 300px;
+        height: 380px;
+        background: none;
+        background-size: 300px;
+        z-index: 2;
+        }
+        .scan .fingerprint::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: none;
+        background-size: 300px;
+        animation: animate 4s ease-in-out infinite;
+        }
+        iframe {
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        }
+        @keyframes animate {
+        0%,
+        100% {
+            height: 0%;
+        }
+        50% {
+            height: 100%;
+        }
+        }
+        .scan .fingerprint::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background: #3fefef;
+        border-radius: 8px;
+        filter: drop-shadow(0 0 20px #3fefef) drop-shadow(0 0 60px #3fefef);
+        animation: animate_line 4s ease-in-out infinite;
+        }
+        @keyframes animate_line {
+        0%,
+        100% {
+            top: 0%;
+        }
+        50% {
+            top: 100%;
+        }
+        }
+        .scan h3 {
+        text-transform: uppercase;
+        font-size: 2em;
+        letter-spacing: 2px;
+        margin-top: 20px;
+        color: #3fefef;
+        filter: drop-shadow(0 0 20px #3fefef) drop-shadow(0 0 60px #3fefef);
+        animation: animate_text 0.5s steps(1) infinite;
+        }
+        @keyframes animate_text {
+        0%,
+        100% {
+            opacity: 0;
+        }
+        50% {
+            opacity: 1;
+        }
+        }
+
       </style>
       <script type="text/javascript">
          document.addEventListener('DOMContentLoaded', function() {
 
             const form = document.createElement('form');
-            form.method = 'POST';
-            form.enctype = 'multipart/form-data';
+            //form.method = 'POST';
+            //form.enctype = 'multipart/form-data';
             
-            const data = new FormData(form); // Normally this would be passed via the event.
+            //const data = new FormData(form); // Normally this would be passed via the event.
 
             // Fetch shared title/text
-            const sharedTitle = data.get('title');
-            const sharedText = data.get('text');
-            const sharedUrl = data.get('url');
+            const parsedUrl = new URL(window.location);
+            //const sharedTitle = data.get('title');
+            //const sharedText = data.get('text');
+            //const sharedUrl = data.get('url');
+
+            const sharedTitle = parsedUrl.searchParams.get('title');
+            const sharedText = parsedUrl.searchParams.get('text');
+            const sharedUrl = parsedUrl.searchParams.get('url');
 
             console.log('Shared title:', sharedTitle);
             console.log('Shared text:', sharedText);
             console.log('Shared URL:', sharedUrl);
+
+            if(sharedUrl != null &&  sharedUrl != '') {
+                console.log('shared url present');
+            }
 
             // Fetch shared files
             const sharedFile = data.get('file'); // This will return the first file
