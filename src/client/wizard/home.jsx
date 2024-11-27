@@ -375,6 +375,14 @@ class Home extends Component {
       />
                                        </td></tr>
                                 </table>
+                                <br/><br/>
+                                <div class="share-warning" style={{display: 'table'}}>
+                                <img style={{width: '60px',display: 'table-cell'}} src="../psassets/warning.png" />
+                                <h2 class="font-heading md:text-4xl text-gray-900 font-black tracking-tight text-1xl" style={{display: 'table-cell', fontSize: '1.2rem', verticalAlign: 'top'}} >Scan suspicious links to avoid online scams & threats:</h2>
+                                 
+                                </div>
+                                <div><img src="../psassets/share.gif" style={{width: '100%', marginTop: '96px', borderRadius: '8px'}} /></div>
+
                                 </div>
                                 <div class="flex flex-wrap -m-2">
                              {this.state.displayRiskLevel == false && <div class="w-full md:w-auto p-2 float-bottom" id="risk-checker-cta"><a class="block w-full px-8 py-3.5 text-lg text-center text-white font-bold bg-gray-900 hover:bg-gray-800 focus:ring-4 focus:ring-gray-600 rounded-full" onClick={()=>{this.showRiskLevel()}} data-config-id="text3">Next (2/3)</a></div>}
@@ -384,6 +392,7 @@ class Home extends Component {
                           </div>
                           </div>
                        </div>
+
                        <div class="max-w-3xl mx-auto" style={{background: 'white',padding: '0px',position: 'absolute',zIndex: 1,top: '200px',left:'0px', width: '100%'}} dangerouslySetInnerHTML={{__html: this.state.displayRiskLevel ? this.state.ensureSafetyHTML : this.state.exposures}}>
   
                        </div>
