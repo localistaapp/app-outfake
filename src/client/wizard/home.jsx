@@ -1,7 +1,62 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 import GoogleOneTapLogin from 'react-google-one-tap-login';
 import axios from 'axios';
+
+const IOSSwitch = withStyles((theme) => ({
+   root: {
+     width: 42,
+     height: 26,
+     padding: 0,
+     margin: theme.spacing(1),
+   },
+   switchBase: {
+     padding: 1,
+     '&$checked': {
+       transform: 'translateX(16px)',
+       color: theme.palette.common.white,
+       '& + $track': {
+         backgroundColor: '#52d869',
+         opacity: 1,
+         border: 'none',
+       },
+     },
+     '&$focusVisible $thumb': {
+       color: '#52d869',
+       border: '6px solid #fff',
+     },
+   },
+   thumb: {
+     width: 24,
+     height: 24,
+   },
+   track: {
+     borderRadius: 26 / 2,
+     border: `1px solid ${theme.palette.grey[400]}`,
+     backgroundColor: theme.palette.grey[50],
+     opacity: 1,
+     transition: theme.transitions.create(['background-color', 'border']),
+   },
+   checked: {checked: true},
+   focusVisible: {},
+ }))(({ classes }) => {
+   return (
+     <Switch
+       focusVisibleClassName={classes.focusVisible}
+       disableRipple
+       classes={{
+         root: classes.root,
+         switchBase: classes.switchBase,
+         thumb: classes.thumb,
+         track: classes.track,
+         checked: classes.checked,
+       }}
+     />
+   );
+ });
 
 class Home extends Component {
 
@@ -160,7 +215,7 @@ class Home extends Component {
      constructor(props) {
         super(props);
         this.leakTemplate = `<div class="p-3 w-full"><div class="bg-gray-100 block cursor-pointer p-4 rounded-3xl" x-data="{ accordion: false }" x-on:click="accordion = !accordion"><div class="-m-2 flex flex-wrap"><div class="p-2 flex-1"><div style="display:flex"><img src="https://img.logo.dev/{AppName}?token=pk_G0TzXJmeR22hjyoG7hROlQ" style="width:36px;height:36px;border-radius:8px"><h3 class="font-black font-heading text-gray-900 text-l" data-config-id="txt-b0bdec-2" style="margin-top:5px;margin-left:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:200px">{dbname} likely exposures - {AttributesExposed}</h3></div><div class="duration-500 h-0 overflow-hidden" :style="accordion ? 'height: ' + $refs.container.scrollHeight + 'px' : ''" x-ref="container"><p class="font-bold mt-4 text-black-500" data-config-id="txt-b0bdec-7" style="font-family:Quicksand;font-weight:500"><table style="margin-left:18px">{trHTML}</table></div></div><div class="p-2 w-auto"><span class="inline-block rotate-0 transform"><svg data-config-id="svg-b0bdec-1" fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M17.9207 8.17999H11.6907H6.08072C5.12072 8.17999 4.64073 9.33999 5.32073 10.02L10.5007 15.2C11.3307 16.03 12.6807 16.03 13.5107 15.2L15.4807 13.23L18.6907 10.02C19.3607 9.33999 18.8807 8.17999 17.9207 8.17999Z" fill="#D1D5DB"></path></svg></span></div></div></div></div>`;
-        this.state = {scanURL: '', currStep: 2, loading: false, leaksCount: '', isSamePasswordExposed: false, passwordExposed: true, displayRiskLevel: true, riskLevel: '', messageTxt: '', userEmail: '', exposures: `<div class="flex flex-wrap -m-3 mb-10">${this.leakTemplate}</div><br><br><br>`};
+        this.state = {scanURL: '', currStep: 2, loading: false, leaksCount: '', isSamePasswordExposed: false, passwordExposed: true, displayRiskLevel: true, riskLevel: '', messageTxt: '', userEmail: '', exposures: `<div class="flex flex-wrap -m-3 mb-10">${this.leakTemplate}</div><br><br><br>`, riskLevel: sessionStorage.getItem('riskLevelValue')};
      }
      componentDidMount() {
         window.viewportCheck = setInterval(()=> {
@@ -169,6 +224,8 @@ class Home extends Component {
            }
         },2000);
         this.sectionImmediateRisks = {"High":{"isSamePasswordExposed":{"para1":"You are at real high risk as you have the same passwords used across sites and they are exposed in the dark web.","para2":"You should watch out for suspicious links and social online scammers."},"passwordExposed":{"para1":"You are at high risk as you have your  passwords exposed in the dark web that makes you vulnerable for man-in-the-middle attacks.","para2":"You should watch out for suspicious websites and online scammers."},"passwordNotExposed":{"para1":"You are at high risk as you have your  personal data exposed in the dark web that makes you vulnerable for cyber attacks.","para2":"You should watch out for suspicious websites and online scammers."}},"Moderate":{"isSamePasswordExposed":{"para1":"You are at high risk as you have the same passwords used across sites and they are exposed in the dark web.","para2":"You should watch out for suspicious links and social online scammers."},"passwordExposed":{"para1":"You are at moderate risk as you have your  password exposed in the dark web that makes you vulnerable for man-in-the-middle attacks.","para2":"You should watch out for suspicious websites and online scammers."},"passwordNotExposed":{"para1":"You are at moderate risk as you have your  personal data exposed in the dark web that makes you vulnerable for cyber attacks.","para2":"You should watch out for suspicious websites and online scammers."}}};
+        document.querySelectorAll('.MuiIconButton-root')[0].click();
+        document.querySelectorAll('.MuiIconButton-root')[1].click();
         document.addEventListener('DOMContentLoaded', function() {
 
             const form = document.createElement('form');
@@ -193,6 +250,7 @@ class Home extends Component {
 
             if(sharedUrl != null &&  sharedUrl != '') {
                this.setState({scanURL: sharedUrl});
+               document.querySelector('#scanner').style.display = 'block';
             }
          }.bind(this));
       
@@ -208,7 +266,9 @@ class Home extends Component {
                              <a href="/#">
                              <img src="../psassets/logo.png" alt="" data-config-id="img-fe4768-1" className="logo"/>
                              </a>
+
                           </div>
+                          <div><img className='custom-icon-shield' src={`../psassets/shield1.png`} alt="" /></div>
                        </div>
                     </div>
                     <div className="w-auto">
@@ -270,7 +330,7 @@ class Home extends Component {
                     </div>
                  </div>}
                  {this.state.currStep == 2 && <div id="checker-step2" class="container mx-auto px-4 py-6" style={{background: '#f3f4f6'}}>
-                 <div class="scan wrapper">
+                 <div id="scanner" class="scan wrapper">
                      <div class="fingerprint"></div>
                      <div class="overlay"></div>
                         <iframe src={this.state.scanURL} frameborder="0" allowfullscreen></iframe>
@@ -288,9 +348,7 @@ class Home extends Component {
                     {this.state.displayRiskLevel && <div class="max-w-7xl mx-auto">
                        <div class="flex flex-wrap items-center justify-between -m-4 pb-12 pb-6">
                           <div class="w-full md:w-1/2 p-0 p-0" style={{paddingBottom: '0.6rem',paddingLeft: '1rem',display: 'flex'}}>
-                           <h2 class="font-heading md:text-4xl text-gray-900 font-black tracking-tight text-2xl" >Your</h2>
-                             <h2 class="font-heading md:text-5xl text-gray-900 font-black tracking-tight text-2xl" data-config-id="text11" style={{color: '#000',fontSize: '1.5rem',marginLeft: '7px',fontWeight: 'bold'}}> Risk Level:</h2>
-                              <img class="custom-icon" src={`../psassets/riskLevel${this.state.riskLevel}.png`} alt="" className='risk-level'></img><span class="font-heading md:text-4xl text-gray-900 font-black tracking-tight text-1xl" style={{position: 'relative', left: '8px', top: '4px', fontSize: '0.9rem'}}>{this.state.riskLevel == 'Moderate' ? 'Medium' : 'High'}</span>
+                           <h2 class="font-heading md:text-4xl text-gray-900 font-black tracking-tight text-1xl" style={{fontSize: '1.2rem'}} >Your Risk Level: <b>Moderate</b></h2>
                           </div>
                           
                        </div>
@@ -301,10 +359,22 @@ class Home extends Component {
                        <div class="absolute left-0 w-full h-1/2 bg-white border-l border-r border-b border-gray-100 rounded-b-3xl top-0" style={{zIndex: '-1'}}></div>
                        <div class="relative z-10 flex flex-nowrap -m-4 transition-transform duration-500 ease-in-out" >
                           <div x-ref="slide1" class="flex-shrink-0 max-w-sm w-full p-0">
-                             <div class="flex flex-col justify-between p-8 h-full bg-gray-100 border border-gray-100 rounded-3xl shadow-md p-4 fheight m-4" style={{height: '143px',background:'#fff'}} contenteditable="false">
+                             <div class="flex flex-col justify-between p-2 h-full bg-gray-100 border border-gray-100 rounded-3xl shadow-md p-4 fheight m-4" style={{height: '133px',background:'#fff'}} contenteditable="false">
                                 <div class="flex-initial mb-0 mb-0" style={{display: 'inline-table'}}>
-                                <img className='custom-icon' src={this.state.displayRiskLevel ? `../psassets/shield1.png` : `../psassets/binary2.png`} alt="" />
-                                <p id="messageSpan" style={{paddingLeft: '16px',display: 'table-cell',verticalAlign: 'top'}} class="text-lg text-gray-700 custom-msg" dangerouslySetInnerHTML={{__html:this.state.messageTxt}}></p>
+                                <table style={{width: '100%'}}>
+                                    <tr><td style={{width: '80%',paddingLeft: '8px'}}>Password Theft Protection</td><td style={{paddingLeft: '4px'}}>
+                                    <FormControlLabel
+        control={<IOSSwitch defaultChecked name="checkedB" />}
+        label=""
+      />
+                                       </td></tr>
+                                    <tr><td style={{width: '80%',paddingLeft: '8px'}}>Link Scan Protection</td><td style={{paddingLeft: '4px'}}>
+                                    <FormControlLabel
+        control={<IOSSwitch defaultChecked name="checkedC" />}
+        label=""
+      />
+                                       </td></tr>
+                                </table>
                                 </div>
                                 <div class="flex flex-wrap -m-2">
                              {this.state.displayRiskLevel == false && <div class="w-full md:w-auto p-2 float-bottom" id="risk-checker-cta"><a class="block w-full px-8 py-3.5 text-lg text-center text-white font-bold bg-gray-900 hover:bg-gray-800 focus:ring-4 focus:ring-gray-600 rounded-full" onClick={()=>{this.showRiskLevel()}} data-config-id="text3">Next (2/3)</a></div>}

@@ -114,6 +114,7 @@ class Shortlists extends Component {
         if (passwordArr.length < 1) {
          this.setState({passwordExposed: false});
         }
+        sessionStorage.setItem('riskLevelValue', isSamePasswordExposed || entries.length > 3 ? 'High' : 'Moderate');
         this.setState({exposures: `<div class="flex flex-wrap -m-3 mb-10">${linkTemplateHTML}</div><br><br><br></br>`,isSamePasswordExposed: isSamePasswordExposed, riskLevel: isSamePasswordExposed || entries.length > 3 ? 'High' : 'Moderate'});
         this.setState({currStep: 2, messageTxt: 'Your personal data including your <b>address</b> has been exposed on dark web.'});
      }
